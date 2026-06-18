@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Participación - Centro de Exalumnos San Mateo</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Roboto -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Roboto', 'sans-serif'],
+                    },
+                    colors: {
+                        darkBg: '#090d16',
+                        darkCard: '#111827',
+                        cyanNeon: {
+                            50: '#ecfeff',
+                            100: '#cffafe',
+                            200: '#a5f3fc',
+                            300: '#67e8f9',
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                            600: '#0891b2',
+                            700: '#0e7490',
+                            800: '#155e75',
+                            900: '#164e63',
+                            950: '#083344',
+                        }
+                    },
+                    boxShadow: {
+                        'cyan-glow': '0 0 15px -3px rgba(6, 182, 212, 0.4)',
+                        'cyan-glow-hover': '0 0 25px 0px rgba(6, 182, 212, 0.6)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #060911;
+            color: #e2e8f0;
+            font-family: 'Roboto', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Línea de luz cian en movimiento continuo/hover */
+        .cyan-glow-card {
+            position: relative;
+            background: #0f172a;
+            border-radius: 1rem;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+            z-index: 1;
+            border: 1px solid rgba(6, 182, 212, 0.15);
+        }
+
+        .cyan-glow-card::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(90deg, #06b6d4, #083344, #22d3ee, #06b6d4);
+            background-size: 300% 300%;
+            border-radius: 1rem;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .cyan-glow-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(6, 182, 212, 0.6);
+            box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.3);
+        }
+
+        .cyan-glow-card:hover::before {
+            opacity: 1;
+            animation: cyanBorderMovement 3s linear infinite;
+        }
+
+        @keyframes cyanBorderMovement {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Scrollbar en tono cian */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #060911;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #111827;
+            border-radius: 4px;
+            border: 1px solid rgba(6, 182, 212, 0.2);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #06b6d4;
+        }
+
+        /* Efecto aurora cian en el fondo */
+        .aurora-cyan-1 {
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, rgba(6,9,17,0) 70%);
+            top: -150px;
+            right: -100px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .aurora-cyan-2 {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(8, 51, 68, 0.2) 0%, rgba(6,9,17,0) 70%);
+            bottom: -150px;
+            left: -150px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Animación de pulso suave */
+        .pulse-cyan {
+            animation: pulseCyanEffect 2s infinite;
+        }
+
+        @keyframes pulseCyanEffect {
+            0% {
+                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0.5);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(6, 182, 212, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen relative font-sans">
+    <div class="aurora-cyan-1"></div>
+    <div class="aurora-cyan-2"></div>
+
+    <!-- Sello oficial de la Compañía de Jesús (IHS con Cruz y Clavos) como marca de agua sutil de fondo -->
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden z-0 select-none">
+        <svg viewBox="0 0 400 400" class="w-[320px] h-[320px] sm:w-[550px] sm:h-[550px] md:w-[750px] md:h-[750px] text-cyanNeon-500/[0.04] fill-current transition-all duration-1000" xmlns="http://www.w3.org/2000/svg">
+            <!-- Rayos del Sol Radiante -->
+            <g stroke="currentColor" stroke-width="2" opacity="0.3">
+                <line x1="200" y1="50" x2="200" y2="350" />
+                <line x1="50" y1="200" x2="350" y2="200" />
+                <line x1="94" y1="94" x2="306" y2="306" />
+                <line x1="94" y1="306" x2="306" y2="94" />
+                <line x1="200" y1="50" x2="200" y2="350" transform="rotate(22.5 200 200)" />
+                <line x1="50" y1="200" x2="350" y2="200" transform="rotate(22.5 200 200)" />
+                <line x1="94" y1="94" x2="306" y2="306" transform="rotate(22.5 200 200)" />
+                <line x1="94" y1="306" x2="306" y2="94" transform="rotate(22.5 200 200)" />
+                
+                <!-- Rayos flamígeros estilizados -->
+                <path d="M 200,140 Q 185,100 200,60 Q 215,100 200,140" fill="currentColor" opacity="0.4"/>
+                <path d="M 200,140 Q 185,100 200,60 Q 215,100 200,140" fill="currentColor" opacity="0.4" transform="rotate(45 200 200)"/>
+                <path d="M 200,140 Q 185,100 200,60 Q 215,100 200,140" fill="currentColor" opacity="0.4" transform="rotate(90 200 200)"/>
+                <path d="M 200,140 Q 185,100 200,60 Q 215,100 200,140" fill="currentColor" opacity="0.4" transform="rotate(135 200 200)"/>
+                <path d="M 200,140 Q 185,100 200,60 Q 215,100 200,140" fill="currentColor" opacity="0.4" transform="rotate(180 200 200)"/>
+                <path d="M 200,140 Q 185,100 200,60 Q 215,100 200,140" fill="currentColor" opacity="0.4" transform="rotate(225 200 200)"/>
+                <path d="M 200,140 Q 185,100 200,60 Q 215,100 200,140" fill="currentColor" opacity="0.4" transform="rotate(270 200 200)"/>
+                <path d="M 200,140 Q 185,100 200,60 Q 215,100 200,140" fill="currentColor" opacity="0.4" transform="rotate(315 200 200)"/>
+            </g>
+            <!-- Círculo interior del disco solar -->
+            <circle cx="200" cy="200" r="85" fill="none" stroke="currentColor" stroke-width="3" opacity="0.4" />
+            <!-- Monograma Jesuita IHS -->
+            <!-- Letra I -->
+            <path d="M 140,175 L 140,225" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+            <path d="M 130,175 L 150,175 M 130,225 L 150,225" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+            <!-- Letra H -->
+            <path d="M 180,175 L 180,225 M 220,175 L 220,225 M 180,200 L 220,200" stroke="currentColor" stroke-width="12" stroke-linecap="round" />
+            <!-- Cruz unida sobre el travesaño de la H -->
+            <path d="M 200,140 L 200,200 M 185,155 L 215,155" stroke="currentColor" stroke-width="10" stroke-linecap="round" />
+            <!-- Letra S -->
+            <path d="M 265,175 C 245,175 240,190 250,198 C 265,205 265,225 245,225" fill="none" stroke="currentColor" stroke-width="11" stroke-linecap="round" />
+            <!-- Tres clavos de la Pasión -->
+            <path d="M 180,245 L 200,270" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+            <path d="M 200,242 L 200,275" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+            <path d="M 220,245 L 200,270" stroke="currentColor" stroke-width="8" stroke-linecap="round" />
+            <circle cx="180" cy="245" r="5" fill="currentColor" />
+            <circle cx="200" cy="242" r="5" fill="currentColor" />
+            <circle cx="220" cy="245" r="5" fill="currentColor" />
+        </svg>
+    </div>
+
+    <!-- HEADER -->
+    <header class="relative z-10 border-b border-cyanNeon-950 bg-slate-950/80 backdrop-blur-md sticky top-0 shadow-cyan-glow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+            <!-- Brand / Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-16 h-16 bg-white rounded-xl flex items-center justify-center border border-cyanNeon-500/40 p-0 overflow-hidden shadow-inner">
+                    <img 
+                        src="Vertical Color sobre oscuro.png" 
+                        alt="Colegio San Mateo" 
+                        class="w-full h-full object-contain scale-[1.35]"
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fa-solid fa-graduation-cap text-cyanNeon-500 text-2xl\'></i>';"
+                    />
+                </div>
+                <div>
+                    <span class="text-xs uppercase tracking-widest text-cyanNeon-500 font-bold block">Colegio San Mateo</span>
+                    <h1 class="text-sm sm:text-lg font-black tracking-tight text-white flex items-center gap-1.5">
+                        Centro de Exalumnos <span class="text-cyanNeon-400">Portal Activo</span>
+                    </h1>
+                </div>
+            </div>
+
+            <!-- Live Status Indicator -->
+            <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyanNeon-400 pulse-cyan"></span>
+                <span class="text-xs text-cyanNeon-400 font-bold tracking-wider uppercase hidden sm:inline">Conexión Digital Activa</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
+        
+        <!-- HERO CONMEMORATIVO CIAN -->
+        <div class="bg-slate-950/85 rounded-2xl border border-cyanNeon-900/40 p-6 sm:p-8 mb-10 relative overflow-hidden shadow-cyan-glow">
+            <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                <i class="fa-solid fa-church text-9xl text-cyanNeon-400"></i>
+            </div>
+            
+            <div class="relative z-10 max-w-4xl">
+                <div class="inline-flex items-center space-x-2 bg-cyanNeon-950/60 border border-cyanNeon-800/50 px-3 py-1 rounded-full mb-4">
+                    <span class="w-2 h-2 rounded-full bg-cyanNeon-400"></span>
+                    <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-cyanNeon-300">Convocatoria Oficial 2026</span>
+                </div>
+                
+                <h2 class="text-2xl sm:text-4xl lg:text-5xl font-black text-white leading-tight mb-4">
+                    Refundación y Acción:<br> 
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyanNeon-400 to-cyanNeon-600">
+                        El Legado del Arzobispo Francisco Valdés S nos une.
+                    </span>
+                </h2>
+                
+                <div class="text-slate-300 text-sm sm:text-base leading-relaxed mb-6 space-y-3">
+                    <p class="font-bold text-white text-base">Estimada comunidad de exalumnos y exalumnas sanmateinos:</p>
+                    <p>
+                        ¿Recuerdan los inviernos de Osorno compartidos en los pasillos, los campamentos que templaron nuestro carácter y la mística de servicio que forjó nuestra juventud? El Colegio San Mateo nos regaló una identidad imborrable bajo la premisa de <strong class="text-cyanNeon-400">"Entramos para aprender y Salimos para servir"</strong>. Hoy, rumbo a los 70 años de historia, te invitamos a ser protagonista de la refundación de nuestro Centro de Exalumnos. Queremos construir un espacio dinámico, participativo y solidario donde tu experiencia y tu talento se reencuentren para inspirar a nuevas generaciones. Súmate a este hito, inscríbete en nuestro censo digital y construyamos juntos el legado del mañana. ¡Osorno y tu colegio te esperan de vuelta en casa!
+                    </p>
+                    <p class="text-xs sm:text-sm italic text-cyanNeon-400 font-semibold pt-2 border-t border-cyanNeon-950/40">
+                        Fraternalmente,<br>
+                        <span class="text-white font-bold not-italic">Directiva del Centro de Exalumnos Colegio San Mateo</span>
+                    </p>
+                </div>
+
+                <!-- Accesos rápidos -->
+                <div class="flex flex-wrap gap-4">
+                    <a href="#formulario-seccion" class="bg-cyanNeon-600 hover:bg-cyanNeon-500 text-slate-950 font-extrabold py-2.5 px-6 rounded-lg text-xs tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-cyanNeon-400/20">
+                        <i class="fa-solid fa-file-signature mr-1.5"></i>Confirmar Participación
+                    </a>
+                    <a href="#stats-section" class="bg-slate-900 hover:bg-slate-800 border border-cyanNeon-800/40 text-cyanNeon-400 font-bold py-2.5 px-6 rounded-lg text-xs tracking-wider uppercase transition-all duration-300">
+                        <i class="fa-solid fa-chart-line mr-1.5"></i>Ver Estadísticas
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- TWO COLUMN INTERACTIVE CONTAINER -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- COLUMNA IZQUIERDA (7/12): FORMULARIO DE PARTICIPACIÓN -->
+            <div id="formulario-seccion" class="lg:col-span-7 space-y-6">
+                <div class="cyan-glow-card p-6 sm:p-8 bg-slate-950/90 rounded-2xl relative overflow-hidden">
+                    <div class="flex items-center justify-between mb-6 border-b border-cyanNeon-950 pb-4">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-cyanNeon-950/60 border border-cyanNeon-800/40 text-cyanNeon-400 rounded-lg">
+                                <i class="fa-solid fa-id-card-clip text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white tracking-tight">Formulario de Confirmación</h3>
+                                <p class="text-xs text-cyanNeon-500 font-semibold uppercase">Únete a la Refundación y Hitos 70 Años</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Form -->
+                    <form id="participationForm" onsubmit="submitForm(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-cyanNeon-500 font-bold mb-1">Nombre Completo</label>
+                                <input type="text" id="pNombre" required placeholder="Ej: Rodrigo Cárcamo" class="w-full bg-slate-900 border border-cyanNeon-950 focus:border-cyanNeon-400 rounded-lg p-2.5 text-xs text-white outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-cyanNeon-500 font-bold mb-1">Correo Electrónico</label>
+                                <input type="email" id="pEmail" required placeholder="tuemail@ejemplo.com" class="w-full bg-slate-900 border border-cyanNeon-950 focus:border-cyanNeon-400 rounded-lg p-2.5 text-xs text-white outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-cyanNeon-500 font-bold mb-1">Año de Egreso (Generación)</label>
+                                <input type="number" id="pEgreso" required min="1959" max="2026" placeholder="Ej: 2005" class="w-full bg-slate-900 border border-cyanNeon-950 focus:border-cyanNeon-400 rounded-lg p-2.5 text-xs text-white outline-none transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs uppercase tracking-wider text-cyanNeon-500 font-bold mb-1">Ciudad o Comuna Actual</label>
+                                <input type="text" id="pCiudad" required placeholder="Ej: Osorno" class="w-full bg-slate-900 border border-cyanNeon-950 focus:border-cyanNeon-400 rounded-lg p-2.5 text-xs text-white outline-none transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-cyanNeon-500 font-bold mb-1">¿Cómo te gustaría integrarte?</label>
+                            <select id="pRol" class="w-full bg-slate-900 border border-cyanNeon-950 focus:border-cyanNeon-400 rounded-lg p-2.5 text-xs text-white outline-none transition-all cursor-pointer">
+                                <option value="coordinador">Liderar / Coordinar una Comisión de Trabajo</option>
+                                <option value="mentor">Ofrecer Mentorías y Charlas a Alumnos de Media</option>
+                                <option value="social">Participar de Proyectos de Ayuda Social en Osorno</option>
+                                <option value="socio">Ser Socio Aportante de Fondos</option>
+                                <option value="difusion">Apoyar con Difusión / Redes Sociales (Catalina Vega)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider text-cyanNeon-500 font-bold mb-1">Mensaje o Sugerencia para el Centro</label>
+                            <textarea id="pMensaje" rows="3" placeholder="Comparte una breve sugerencia, idea para los 70 años o recuerdo..." class="w-full bg-slate-900 border border-cyanNeon-950 focus:border-cyanNeon-400 rounded-lg p-2.5 text-xs text-white outline-none transition-all resize-none"></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full bg-gradient-to-r from-cyanNeon-600 via-cyanNeon-500 to-cyanNeon-700 hover:from-cyanNeon-500 hover:to-cyanNeon-600 text-slate-950 font-black py-3 px-6 rounded-lg text-xs tracking-widest uppercase transition-all duration-300 shadow-cyan-glow hover:shadow-cyan-glow-hover flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Confirmar mi Participación</span>
+                        </button>
+                    </form>
+
+                    <!-- Mensaje de éxito interactivo dentro de la interfaz (sustituyendo alert) -->
+                    <div id="formSuccessMessage" class="hidden mt-4 p-5 bg-cyanNeon-950/40 border border-cyanNeon-400/50 rounded-xl text-xs space-y-3 animate-pulse">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-circle-check text-base text-cyanNeon-400"></i>
+                            <span class="font-bold text-white text-sm uppercase">¡Participación Registrada Exitosamente!</span>
+                        </div>
+                        <p id="successText" class="text-slate-300 leading-relaxed"></p>
+                        <div class="p-2.5 bg-slate-900/80 border border-cyanNeon-950 rounded-lg">
+                            <p class="text-[10px] text-cyanNeon-400/80 italic font-mono">* Tu nombre ha sido listado en tiempo real en la lista de registros recientes del Centro de Exalumnos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COLUMNA DERECHA (5/12): ESTADÍSTICAS Y REGISTROS EN DIRECTO -->
+            <div id="stats-section" class="lg:col-span-5 space-y-6">
+                
+                <!-- Live Counter & Statistics Card -->
+                <div class="bg-slate-950/95 border border-cyanNeon-900/40 p-6 rounded-2xl shadow-cyan-glow relative">
+                    <h3 class="text-xs uppercase tracking-wider font-bold text-cyanNeon-500 mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-bar"></i> Métricas de la Convocatoria
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-slate-900 p-4 rounded-xl border border-cyanNeon-950 text-center">
+                            <span class="text-3xl font-black text-cyanNeon-400 block" id="totalRegistrados">142</span>
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Exalumnos Confirmados</span>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded-xl border border-cyanNeon-950 text-center">
+                            <span class="text-3xl font-black text-white block">2029</span>
+                            <span class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Meta de los 70 años</span>
+                        </div>
+                    </div>
+
+                    <!-- Meta progress bar -->
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[11px] text-slate-400">
+                            <span>Progreso Primer Hito (150 registros)</span>
+                            <span class="text-cyanNeon-400 font-bold" id="porcentajeHito">94%</span>
+                        </div>
+                        <div class="w-full bg-slate-900 rounded-full h-2 border border-cyanNeon-950 relative overflow-hidden">
+                            <div id="progresoHitoBar" class="bg-gradient-to-r from-cyanNeon-600 to-cyanNeon-400 h-full rounded-full transition-all duration-700" style="width: 94%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feed de Participantes Recientes (Live Update) -->
+                <div class="cyan-glow-card p-6 bg-slate-950/90 rounded-2xl">
+                    <h3 class="text-xs uppercase tracking-wider font-bold text-cyanNeon-500 mb-4 flex items-center justify-between">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-users"></i> Registros Recientes
+                        </span>
+                        <span class="text-[9px] bg-cyanNeon-950 text-cyanNeon-400 border border-cyanNeon-800/40 px-2 py-0.5 rounded-full uppercase tracking-widest font-mono animate-pulse">En Vivo</span>
+                    </h3>
+
+                    <!-- List Container (Dinámico mediante Javascript) -->
+                    <div id="recentAttendeesList" class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                        <!-- Mock Registries initialized here -->
+                        <div class="bg-slate-900/60 p-3 rounded-lg border border-cyanNeon-950/30 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-white block">Rodrigo Cárcamo</span>
+                                <span class="text-[10px] text-cyanNeon-400 font-mono">Egreso 2005 · Osorno</span>
+                            </div>
+                            <span class="text-[10px] bg-cyanNeon-950 text-cyanNeon-400 border border-cyanNeon-900 px-2.5 py-0.5 rounded-full font-bold">Presidente Prov.</span>
+                        </div>
+                        
+                        <div class="bg-slate-900/60 p-3 rounded-lg border border-cyanNeon-950/30 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-white block">Catalina Vega</span>
+                                <span class="text-[10px] text-cyanNeon-400 font-mono">Egreso 2012 · Osorno</span>
+                            </div>
+                            <span class="text-[10px] bg-cyanNeon-950 text-cyanNeon-400 border border-cyanNeon-900 px-2.5 py-0.5 rounded-full font-bold">Marketing & Media</span>
+                        </div>
+
+                        <div class="bg-slate-900/60 p-3 rounded-lg border border-cyanNeon-950/30 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-white block">Felipe Martínez</span>
+                                <span class="text-[10px] text-cyanNeon-400 font-mono">Egreso 1998 · Santiago</span>
+                            </div>
+                            <span class="text-[10px] bg-cyanNeon-950 text-cyanNeon-400 border border-cyanNeon-900 px-2.5 py-0.5 rounded-full font-bold">Socio Aportante</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INFO RAPIDA CARD -->
+                <div class="bg-slate-950 border border-cyanNeon-950 p-4 rounded-xl text-xs text-slate-400 space-y-2">
+                    <div class="flex items-center gap-2 text-cyanNeon-400 font-bold uppercase tracking-wider text-[10px]">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <span>Importante para la comunidad</span>
+                    </div>
+                    <p class="leading-relaxed text-[11px]">
+                        Tu participación inicial nos ayuda a consolidar el padrón oficial que presentaremos al Rector del Colegio y al Padre Capellán Pablo Poblete para coordinar las asambleas iniciales en las dependencias escolares.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-20 border-t border-cyanNeon-950 bg-slate-950/95 text-slate-400 text-xs py-8 relative z-10 shadow-cyan-glow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            <!-- Izquierda: Colegio -->
+            <div class="text-center md:text-left">
+                <span class="text-sm font-black text-white uppercase tracking-tight">Colegio San Mateo de Osorno</span>
+                <p class="text-[11px] text-cyanNeon-500 font-bold mt-1 uppercase">"Entramos para aprender y Salimos para servir"</p>
+            </div>
+
+            <!-- Centro: Datos solicitados del usuario -->
+            <div class="flex flex-col items-center gap-2">
+                <a href="https://www.dataflowia.com" target="_blank" rel="noopener" class="text-cyanNeon-400 hover:text-cyanNeon-300 font-bold tracking-widest hover:underline flex items-center gap-1.5 uppercase">
+                    <i class="fa-solid fa-globe"></i> www.dataflowia.com
+                </a>
+                <a href="mailto:contacto@dataflowia.com" class="text-slate-300 hover:text-white flex items-center gap-1.5 transition-colors">
+                    <i class="fa-solid fa-envelope text-cyanNeon-500"></i> contacto@dataflowia.com
+                </a>
+            </div>
+
+            <!-- Derecha: Copyright -->
+            <div class="text-center md:text-right text-[11px] text-slate-500">
+                <p>&copy; 2026 Todos los derechos reservados.</p>
+                <p class="text-[10px] text-slate-600 mt-0.5">Centro de Exalumnos Colegio San Mateo de Osorno.</p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- LOGICA INTERACTIVA -->
+    <script>
+        // Array local con los datos iniciales para la visualización en vivo
+        let mockAttendees = [
+            { nombre: "Rodrigo Cárcamo", egreso: "2005", ciudad: "Osorno", rol: "Presidente Prov." },
+            { nombre: "Catalina Vega", egreso: "2012", ciudad: "Osorno", rol: "Marketing & Media" },
+            { nombre: "Felipe Martínez", egreso: "1998", ciudad: "Santiago", rol: "Socio Aportante" }
+        ];
+
+        let counter = 142; // Inicialización de contador simulado
+
+        function submitForm(event) {
+            event.preventDefault();
+
+            // Capturar datos del formulario
+            const nombre = document.getElementById('pNombre').value;
+            const email = document.getElementById('pEmail').value;
+            const egreso = document.getElementById('pEgreso').value;
+            const ciudad = document.getElementById('pCiudad').value;
+            
+            const rolSelect = document.getElementById('pRol');
+            const rolLabel = rolSelect.options[rolSelect.selectedIndex].text;
+            
+            // Texto del éxito del registro simulado local
+            const mensajeSugerencia = document.getElementById('pMensaje').value;
+
+            // Añadir nuevo registro al Array para alimentar el Feed interactivo de la derecha
+            const nuevoParticipante = {
+                nombre: nombre,
+                egreso: egreso,
+                ciudad: ciudad,
+                rol: "Egresado Confirmado"
+            };
+            
+            mockAttendees.unshift(nuevoParticipante); // Lo inserta al principio
+            
+            // Incrementar estadísticas en vivo
+            counter++;
+            document.getElementById('totalRegistrados').innerText = counter;
+            
+            // Recalcular progreso en base a la meta del primer hito (150 personas)
+            const metaPrimerHito = 150;
+            const nuevoPorcentaje = Math.min(Math.round((counter / metaPrimerHito) * 100), 100);
+            
+            document.getElementById('porcentajeHito').innerText = `${nuevoPorcentaje}%`;
+            document.getElementById('progresoHitoBar').style.width = `${nuevoPorcentaje}%`;
+
+            // Actualizar la lista en pantalla
+            updateAttendeesList();
+
+            // Mostrar el mensaje de éxito estructurado
+            const successText = `¡Gracias <strong>${nombre}</strong> (Generación ${egreso})! Hemos registrado tu participación e interés en el rol: <em>"${rolLabel}"</em>. Nos pondremos en contacto contigo a la dirección <strong>${email}</strong> para coordinar las próximas reuniones presenciales y virtuales en Osorno.`;
+            document.getElementById('successText').innerHTML = successText;
+
+            // Ocultar formulario para enfocar el mensaje de éxito con transición
+            document.getElementById('participationForm').classList.add('hidden');
+            document.getElementById('formSuccessMessage').classList.remove('hidden');
+            
+            // Desplazar vista al mensaje
+            document.getElementById('formSuccessMessage').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function updateAttendeesList() {
+            const listContainer = document.getElementById('recentAttendeesList');
+            listContainer.innerHTML = ''; // Limpiar lista previa
+
+            mockAttendees.forEach(attendee => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'bg-slate-900/60 p-3 rounded-lg border border-cyanNeon-950/30 flex items-center justify-between transition-all duration-300 hover:border-cyanNeon-400/40 animate-fade-in';
+                
+                itemDiv.innerHTML = `
+                    <div>
+                        <span class="text-xs font-bold text-white block">${attendee.nombre}</span>
+                        <span class="text-[10px] text-cyanNeon-400 font-mono">Egreso ${attendee.egreso} · ${attendee.ciudad}</span>
+                    </div>
+                    <span class="text-[10px] bg-cyanNeon-950 text-cyanNeon-400 border border-cyanNeon-900 px-2.5 py-0.5 rounded-full font-bold">${attendee.rol}</span>
+                `;
+                listContainer.appendChild(itemDiv);
+            });
+        }
+    </script>
+</body>
+</html>
